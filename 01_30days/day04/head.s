@@ -1,8 +1,8 @@
-# haribote-os boot asm
+# os head asm
 	.code16
 	.section .text
 
-	.equ	BOTPAK, 0x00280000	# location where bootpack is loaded
+	.equ	OS_START_ADDR, 0x00280000	# location where bootpack is loaded
 	.equ	DSKCAC, 0x00100000	# location of disk cache
 	.equ	DSKCAC0, 0x00008000	# location of disk cache (real mode)
 
@@ -60,9 +60,9 @@ pipelineflush:
 	mov	%ax, %gs
 	mov	%ax, %ss
 
-# Copy bootpack
-	mov	$bootpack, %esi
-	mov	$BOTPAK, %edi
+# Copy os_start
+	mov	$os_start, %esi
+	mov	$OS_START_ADDR, %edi
 	mov	$512*1024/4, %ecx
 	call	memcpy
 
@@ -81,10 +81,10 @@ pipelineflush:
 	sub	$512/4, %ecx
 	call	memcpy
 
-# everything done before running bootpack
+# everything done before running os_start
 
-# run bootpack
-	mov	$BOTPAK, %ebx
+# run os_start
+	mov	$OS_START_ADDR, %ebx
 	mov	16(%ebx), %ecx
 	add	$3, %ecx
 	shr	$2, %ecx
@@ -123,7 +123,7 @@ memcpy:
 GDT0:
 	.fill	8	# NULL Selector
 	.word	0xffff, 0x0000, 0x9200, 0x00cf	# R/W segment (base = 0, limit=0xfffff, G=1, D/B=1)
-	.word	0xffff, 0x0000, 0x9a28, 0x0047	# executable segment for bootpack (base = 0x0028000, limit=0x7ffff, G=0, D/B=1)
+	.word	0xffff, 0x0000, 0x9a28, 0x0047	# executable segment for os_start (base = 0x0028000, limit=0x7ffff, G=0, D/B=1)
 
 	.word	0
 GDTR0:
@@ -131,4 +131,4 @@ GDTR0:
 	.long	GDT0
 
 	.balign 16, 0
-bootpack:
+os_start:

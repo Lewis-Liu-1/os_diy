@@ -25,7 +25,7 @@ void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, i
 #define COL8_008484		14
 #define COL8_848484		15
 
-void HariMain(void)
+void main(void)
 {
 	char *vram;
 	int xsize, ysize;

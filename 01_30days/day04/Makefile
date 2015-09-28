@@ -77,7 +77,7 @@ os.info: os.out Makefile
 	heap_start=0x$$(LANG=C $(NM) os.out | awk '/_sheap/ {print $$1}'); \
 	heap_end=0x$$(LANG=C $(NM) os.out | awk '/_eheap/ {print $$1}'); \
 	data_lma=0x$$(LANG=C $(NM) os.out | awk '/_sidata/ {print $$1}'); \
-	entry_point=0x$$(LANG=C $(NM) os.out | awk '/HariMain/ {print $$1}'); \
+	entry_point=0x$$(LANG=C $(NM) os.out | awk '/main/ {print $$1}'); \
 	perl -e "print pack('LA4LLLLLLL', $$heap_end, 'Hari', 0, $$data_start, \
 	$$data_end - $$data_start, 0x24 + $$data_lma, 0xe9000000, $$entry_point - $$text_start + 4, $$heap_start);" > $@
 
